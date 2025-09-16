@@ -40,6 +40,7 @@ sboms:
 signs:
   - cmd: cosign
     certificate: "${artifact}.pem"
+    output: true
     args:
       - sign-blob
       - "--output-certificate=${certificate}"
@@ -68,6 +69,7 @@ dockers_v2:
 docker_signs:
   - cmd: cosign
     artifacts: manifests
+    output: true
     args:
       - "sign"
       - "${artifact}"
