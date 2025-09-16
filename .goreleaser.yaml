@@ -31,3 +31,44 @@ release:
     ---
 
     Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+
+# SBOMs for the archives.
+sboms:
+  - artifacts: archive
+
+# Sign binaries with cosign.
+signs:
+  - cmd: cosign
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: checksum
+
+# Create Docker images.
+# We create a manifest below, so here the images need the suffix with the
+# architecture.
+dockers_v2:
+  - images:
+      - "ghcr.io/goreleaser/example-uv"
+    tags:
+      - "{{.Tag}}"
+    dockerfile: Dockerfile
+    labels:
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "{{.GitURL}}"
+
+# Sign the Docker images with cosign as well.
+docker_signs:
+  - cmd: cosign
+    artifacts: manifests
+    args:
+      - "sign"
+      - "${artifact}"
+      - "--yes"
