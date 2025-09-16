@@ -1,4 +1,5 @@
 FROM python:3-alpine
-COPY *.whl /tmp/
+ARG TARGETPLATFORM
+ENTRYPOINT [ "python", "-m", "example" ]
+COPY $TARGETPLATFORM/*.whl /tmp/
 RUN pip install /tmp/*.whl
-ENTRYPOINT [ "python", "-m", "example_uv" ]

@@ -53,7 +53,7 @@ signs:
 # architecture.
 dockers_v2:
   - images:
-      - "ghcr.io/goreleaser/example-uv"
+      - "ghcr.io/goreleaser/example-poetry"
     tags:
       - "{{.Tag}}"
     dockerfile: Dockerfile
